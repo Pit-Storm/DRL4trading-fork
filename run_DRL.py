@@ -1,3 +1,10 @@
+# Set TF Loglevel
+import os
+import logging
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+import tensorflow as tf
+tf.get_logger().setLevel(logging.ERROR)
+
 # common library
 import pandas as pd
 import numpy as np
@@ -24,8 +31,8 @@ def run_model() -> None:
     # unique_trade_date needs to start from 2015/10/01 for validation purpose
     unique_trade_date = data[(data.datadate > 20151001)&(data.datadate <= 20200707)].datadate.unique()
 
-    # rebalance_window is the number of months to retrain the model
-    # validation_window is the numebr of months to validation the model and select for trading
+    # rebalance_window is the number of months (=Number/21) to retrain the model
+    # validation_window is the numebr of months (=Number/21) to validation the model and select for trading
     rebalance_window = 63
     validation_window = 63
     
