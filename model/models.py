@@ -166,7 +166,7 @@ def run_ensemble_strategy(df, unique_trade_date, rebalance_window, validation_wi
         print("======Model training from: ", 20090000, "to ",
               unique_trade_date[i - rebalance_window - validation_window])
         # print("training: ",len(data_split(df, start=20090000, end=test.datadate.unique()[i-rebalance_window]) ))
-        # print("==============Model Training===========")
+        print("==============Model Training===========")
         print("======A2C Training========")
         model_a2c = train_A2C(env_train, model_name="A2C_10k_dow_{}".format(i), timesteps=20000)
         print("======A2C Validation from: ", unique_trade_date[i - rebalance_window - validation_window], "to ",
@@ -189,6 +189,7 @@ def run_ensemble_strategy(df, unique_trade_date, rebalance_window, validation_wi
               unique_trade_date[i - rebalance_window])
         DRL_validation(model=model_ddpg, test_data=validation, test_env=env_val, test_obs=obs_val)
         sharpe_ddpg = get_validation_sharpe(i)
+        print("DDPG Sharpe Ratio: ", sharpe_ddpg)
 
         ppo_sharpe_list.append(sharpe_ppo)
         a2c_sharpe_list.append(sharpe_a2c)
@@ -216,7 +217,7 @@ def run_ensemble_strategy(df, unique_trade_date, rebalance_window, validation_wi
                                              rebalance_window=rebalance_window,
                                              turbulence_threshold=turbulence_threshold,
                                              initial=initial)
-        # print("============Trading Done============")
+        print("============Trading Done============")
         ############## Trading ends ##############    
 
     end = time.time()
