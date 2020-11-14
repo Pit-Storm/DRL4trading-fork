@@ -8,15 +8,17 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pickle
 
-# shares normalization factor
+# shares normalization factor: How many trades are possible per step?
 HMAX_NORMALIZE = 30
 # initial amount of money we have in our account
 INITIAL_ACCOUNT_BALANCE=1000000
 # total number of stocks in our portfolio
+# TODO: Switch to number of own data
 STOCK_DIM = 30
 # transaction fee: 2/1000 reasonable percentage
 TRANSACTION_FEE_PERCENT = 0.002
 
+# TODO: Get rid of turbulence threshold
 # turbulence index: 120 reasonable threshold
 TURBULENCE_THRESHOLD = 120
 # Normalization factor: (not used)
@@ -35,7 +37,10 @@ class StockEnv(gym.Env):
         self.df = df
 
         # action_space normalization and shape is STOCK_DIM
-        self.action_space = spaces.Box(low = -1, high = 1,shape = (STOCK_DIM,)) 
+        self.action_space = spaces.Box(low = -1, high = 1,shape = (STOCK_DIM,))
+        # TODO: Calculate shape for own data
+        # Idea for calculation: current_balance + num_stocks + (num_stock_columns \times num_stocks)
+
         # Shape = 181: [Current Balance]+[prices 1-30]+[owned shares 1-30] 
         # +[macd 1-30]+ [rsi 1-30] + [cci 1-30] + [adx 1-30]
         self.observation_space = spaces.Box(low=0, high=np.inf, shape = (181,))
@@ -43,6 +48,7 @@ class StockEnv(gym.Env):
         self.data = self.df.loc[self.day,:]
         self.terminal = False             
         # initalize state
+        # TODO: Update values for own data
         self.state = [INITIAL_ACCOUNT_BALANCE] + \
                       self.data.adjcp.values.tolist() + \
                       [0]*STOCK_DIM + \
@@ -52,6 +58,7 @@ class StockEnv(gym.Env):
                       self.data.adx.values.tolist()
         # initialize reward
         self.reward = 0
+        # TODO: Get rid of turbulence
         self.turbulence = 0
         self.cost = 0
         # memorize all the total balance change
@@ -63,6 +70,8 @@ class StockEnv(gym.Env):
 
     def _sell_stock(self, index, action):
         # perform sell action based on the sign of the action
+        # TODO: Get rid of turbulence
+        # TODO: Don't sell a stock if all values of stock are 0
         if self.turbulence<TURBULENCE_THRESHOLD:
             if self.state[index+STOCK_DIM+1] > 0:
                 #update balance
@@ -89,6 +98,7 @@ class StockEnv(gym.Env):
     
     def _buy_stock(self, index, action):
         # perform buy action based on the sign of the action
+        # TODO: Get rid of turbulence
         if self.turbulence< TURBULENCE_THRESHOLD:
             available_amount = self.state[0] // self.state[index+1]
             # print('available_amount:{}'.format(available_amount))
@@ -143,6 +153,7 @@ class StockEnv(gym.Env):
             sum(np.array(self.state[1:(STOCK_DIM+1)])*np.array(self.state[(STOCK_DIM+1):61]))
             #print("begin_total_asset:{}".format(begin_total_asset))
             
+            # Gives indices in sorted order (from lowest to highest value)
             argsort_actions = np.argsort(actions)
             
             sell_index = argsort_actions[:np.where(actions < 0)[0].shape[0]]
@@ -164,14 +175,14 @@ class StockEnv(gym.Env):
             # print("stock_shares:{}".format(self.state[29:]))
             self.state =  [self.state[0]] + \
                     self.data.adjcp.values.tolist() + \
-                    list(self.state[(STOCK_DIM+1):61]) + \
+                    list(self.state[(STOCK_DIM+1):(2*STOCK_DIM+1)]) + \
                     self.data.macd.values.tolist() + \
                     self.data.rsi.values.tolist() + \
                     self.data.cci.values.tolist() + \
                     self.data.adx.values.tolist()
             
             end_total_asset = self.state[0]+ \
-            sum(np.array(self.state[1:(STOCK_DIM+1)])*np.array(self.state[(STOCK_DIM+1):61]))
+            sum(np.array(self.state[1:(STOCK_DIM+1)])*np.array(self.state[(STOCK_DIM+1):(2*STOCK_DIM+1)]))
             
             #print("end_total_asset:{}".format(end_total_asset))
             
