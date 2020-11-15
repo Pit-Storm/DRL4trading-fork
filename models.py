@@ -15,6 +15,7 @@ from stable_baselines.common.policies import MlpPolicy, MlpLstmPolicy
 from stable_baselines.common.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise, AdaptiveParamNoiseSpec
 from stable_baselines.common.vec_env import DummyVecEnv
 from preprocessing.preprocessors import *
+# TODO: Switch to new config location
 from config import config
 
 # customized env

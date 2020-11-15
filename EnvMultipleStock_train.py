@@ -8,6 +8,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pickle
 
+#########
+# TODO: Switch to conts from config.py
 # shares normalization factor
 # 100 shares per trade
 HMAX_NORMALIZE = 100
@@ -17,7 +19,7 @@ INITIAL_ACCOUNT_BALANCE=1000000
 STOCK_DIM = 30
 # transaction fee: 1/1000 reasonable percentage
 TRANSACTION_FEE_PERCENT = 0.001
-
+##########
 
 class StockEnvTrain(gym.Env):
     """A stock trading environment for OpenAI gym"""

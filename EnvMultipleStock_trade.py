@@ -8,6 +8,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pickle
 
+#########
+# TODO: Switch to Consts from config
 # shares normalization factor
 # 100 shares per trade
 HMAX_NORMALIZE = 100
@@ -20,7 +22,7 @@ TRANSACTION_FEE_PERCENT = 0.001
 
 # turbulence index: 90-150 reasonable threshold
 #TURBULENCE_THRESHOLD = 140
-
+##########
 
 class StockEnvTrade(gym.Env):
     """A stock trading environment for OpenAI gym"""

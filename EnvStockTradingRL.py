@@ -8,6 +8,8 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pickle
 
+##########
+# TODO: Switch to consts from config.py
 # shares normalization factor: How many trades are possible per step?
 HMAX_NORMALIZE = 30
 # initial amount of money we have in our account
