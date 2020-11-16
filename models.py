@@ -67,7 +67,6 @@ def DRL_prediction(df,
                    iter_num,
                    unique_trade_date,
                    rebalance_window,
-                   turbulence_threshold,
                    initial):
     ### make a prediction based on trained model### 
 
@@ -75,9 +74,7 @@ def DRL_prediction(df,
     # TODO: Update data_split() for own data
     trade_data = data_split(df, start=unique_trade_date[iter_num - rebalance_window], end=unique_trade_date[iter_num])
     # TODO: Check StockEnvTrade for dependencies to other data
-    # TODO: Get rid of turbulence_treshold
     env_trade = DummyVecEnv([lambda: StockEnvTrade(trade_data,
-                                                   turbulence_threshold=turbulence_threshold,
                                                    initial=initial,
                                                    previous_state=last_state,
                                                    model_name=name,
@@ -126,10 +123,6 @@ def run_ensemble_strategy(df, unique_trade_date, rebalance_window, validation_wi
 
     model_use = []
 
-    # based on the analysis of the in-sample data
-    # TODO: Get rid of turbulence_threshold
-    turbulence_threshold = 140
-
     start = time.time()
     # TODO: switch to datetime days
     for i in range(rebalance_window + validation_window, len(unique_trade_date), rebalance_window):
@@ -142,15 +135,6 @@ def run_ensemble_strategy(df, unique_trade_date, rebalance_window, validation_wi
             # previous state
             initial = False
         
-        # TODO: Throw away this turbulence thing
-        # Tuning trubulence index based on historical data
-        # 2018-2019
-        if (i >= 692) & (i < 1090):
-            turbulence_threshold = 100
-        # 2020
-        if i >= 1090:
-            turbulence_threshold = 90
-
         ############## Environment Setup starts ##############
         ## training env
         # TODO: Switch to datetime format
@@ -165,10 +149,8 @@ def run_ensemble_strategy(df, unique_trade_date, rebalance_window, validation_wi
         # TODO: Update data_split() for own data
         validation = data_split(df, start=unique_trade_date[i - rebalance_window - validation_window],
                                 end=unique_trade_date[i - rebalance_window])
-        # TODO: Get rid of turbulence_threshold
         # TODO: Check StockEnvValidation() for dependencies to other data
         env_val = DummyVecEnv([lambda: StockEnvValidation(validation,
-                                                          turbulence_threshold=turbulence_threshold,
                                                           iteration=i)])
         # TODO: Check why we do need this.
         obs_val = env_val.reset()
@@ -229,12 +211,10 @@ def run_ensemble_strategy(df, unique_trade_date, rebalance_window, validation_wi
         print("Used Model: ", model_ensemble)
 
         # TODO: Check DRL_prediction for dependcies to old data
-        # TODO: Get rid of turbulence treshold
         last_state_ensemble = DRL_prediction(df=df, model=model_ensemble, name="ensemble",
                                             last_state=last_state_ensemble, iter_num=i,
                                             unique_trade_date=unique_trade_date,
                                             rebalance_window=rebalance_window,
-                                            turbulence_threshold=turbulence_threshold,
                                             initial=initial)
         print("============Trading Done============")
         ############## Trading ends ##############    

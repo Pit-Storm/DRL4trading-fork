@@ -25,7 +25,6 @@ def run_model() -> None:
     # read and preprocess data
     # TODO: Read in own Data
     data = preprocess_data()
-    data = add_turbulence(data)
 
     # 2015/10/01 is the date that validation starts
     # 2016/01/01 is the date that real trading starts
