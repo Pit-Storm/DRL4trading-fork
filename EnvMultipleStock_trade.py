@@ -7,18 +7,18 @@ import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import pickle
+import config
 
 #########
-# TODO: Switch to Consts from config
 # shares normalization factor
 # 100 shares per trade
-HMAX_NORMALIZE = 100
+HMAX_NORMALIZE = config.HMAX_NORMALIZE
 # initial amount of money we have in our account
-INITIAL_ACCOUNT_BALANCE=1000000
+INITIAL_ACCOUNT_BALANCE = config.INITIAL_ACCOUNT_BALANCE
 # total number of stocks in our portfolio
-STOCK_DIM = 30
+STOCK_DIM = config.STOCK_DIM
 # transaction fee: 1/1000 reasonable percentage
-TRANSACTION_FEE_PERCENT = 0.001
+TRANSACTION_FEE_PERCENT = config.TRANSACTION_FEE_PERCENT
 
 # turbulence index: 90-150 reasonable threshold
 #TURBULENCE_THRESHOLD = 140

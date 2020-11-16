@@ -5,23 +5,20 @@ import time
 import gym
 
 # RL models from stable-baselines
-from stable_baselines import SAC
 from stable_baselines import PPO2
 from stable_baselines import A2C
 from stable_baselines import DDPG
-from stable_baselines import TD3
 from stable_baselines.ddpg.policies import DDPGPolicy
 from stable_baselines.common.policies import MlpPolicy, MlpLstmPolicy
 from stable_baselines.common.noise import NormalActionNoise, OrnsteinUhlenbeckActionNoise, AdaptiveParamNoiseSpec
 from stable_baselines.common.vec_env import DummyVecEnv
-from preprocessing.preprocessors import *
-# TODO: Switch to new config location
-from config import config
+from dataHandling import *
+import config
 
 # customized env
-from env.EnvMultipleStock_train import StockEnvTrain
-from env.EnvMultipleStock_validation import StockEnvValidation
-from env.EnvMultipleStock_trade import StockEnvTrade
+from EnvMultipleStock_train import StockEnvTrain
+from EnvMultipleStock_validation import StockEnvValidation
+from EnvMultipleStock_trade import StockEnvTrade
 
 
 def train_A2C(env_train, model_name, timesteps=50000):
